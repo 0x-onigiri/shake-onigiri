@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { Link } from 'react-router'
 import { Button } from '@/components/ui/button'
-import { cn, truncateAddress } from '@/lib/utils'
+import { truncateAddress } from '@/lib/utils'
 import {
   useCurrentAccount,
   useDisconnectWallet,
@@ -18,44 +19,47 @@ export default function Header() {
   const currentAccount = useCurrentAccount()
   return (
     <header className="w-full py-4 px-6 flex justify-between items-center border-b">
-      <div className="text-2xl font-bold text-primary">
-        Shake
-      </div>
+      <Link to="/" className="text-2xl font-bold text-primary">Shake</Link>
 
-      {!currentAccount && (
-        <div>
-          <ConnectModal
-            trigger={(
-              <Button>
-                Connect Wallet
-              </Button>
-            )}
-            open={open}
-            onOpenChange={isOpen => setOpen(isOpen)}
-          />
-        </div>
-      )}
-
-      {currentAccount && (
-        <div>
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              asChild
-            >
-              <Button>{truncateAddress(currentAccount.address)}</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <div className="flex flex-col gap-3 p-3">
-                {currentAccount?.label && <p>{currentAccount.label}</p>}
-                <p>{truncateAddress(currentAccount.address)}</p>
-                <Button variant="outline" onClick={() => disconnect()}>
-                  Disconnect
+      <div className="flex justify-between items-center gap-4">
+        <Button asChild variant="link">
+          <Link to="/cook">Cook</Link>
+        </Button>
+        {!currentAccount && (
+          <div>
+            <ConnectModal
+              trigger={(
+                <Button>
+                  Connect Wallet
                 </Button>
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      )}
+              )}
+              open={open}
+              onOpenChange={isOpen => setOpen(isOpen)}
+            />
+          </div>
+        )}
+
+        {currentAccount && (
+          <div>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                asChild
+              >
+                <Button>{truncateAddress(currentAccount.address)}</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <div className="flex flex-col gap-3 p-3">
+                  {currentAccount?.label && <p>{currentAccount.label}</p>}
+                  <p>{truncateAddress(currentAccount.address)}</p>
+                  <Button variant="outline" onClick={() => disconnect()}>
+                    Disconnect
+                  </Button>
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )}
+      </div>
     </header>
   )
 }
